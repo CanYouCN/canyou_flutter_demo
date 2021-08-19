@@ -8,6 +8,20 @@ class WidgetsBody extends StatefulWidget {
 class _WidgetsBodyState extends State<WidgetsBody> {
   List<bool> isSelected = <bool>[false, false, false];
 
+  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+    minimumSize: const Size(88, 36),
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    // BeveledRectangleBorder 顶端斜角
+    // BoxBorder
+    // CircleBorder 圆形
+    // InputBorder
+    // RoundedRectangleBorder 顶端圆角
+    // StadiumBorder 体育场型
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final Map<String, TextStyle> listThemeText = _themeTextList(context);
@@ -122,18 +136,26 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             runSpacing: 10.0,
             children: <Widget>[
               MaterialButton(child: const Text('按钮1'), onPressed: () {}),
-              MaterialButton(child: const Text('按钮2'), onPressed: () {}),
+              const MaterialButton(child: Text('按钮2'), onPressed: null),
               MaterialButton(
                 shape: const StadiumBorder(),
                 child: const Text('按钮3'),
                 onPressed: () {},
               ),
               MaterialButton(
+                shape: ContinuousRectangleBorder(
+                  side: const BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text('按钮3'),
+                onPressed: () {},
+              ),
+              MaterialButton(
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(0.0),
+                    Radius.circular(10),
                   ),
-                  // side: BorderSide(),
+                  side: BorderSide(color: Colors.grey),
                 ),
                 child: const Text('按钮3'),
                 onPressed: () {},
@@ -145,7 +167,7 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             height: 40.0,
             alignment: Alignment.center,
             child: const Text(
-              '常用组件(FlatButton)',
+              '常用组件(TextButton)',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w800,
@@ -156,58 +178,79 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             spacing: 10.0,
             runSpacing: 10.0,
             children: <Widget>[
-              FlatButton(child: const Text('按钮1'), onPressed: () {}),
-              const FlatButton(child: Text('按钮2'), onPressed: null),
-              FlatButton.icon(
+              TextButton(child: const Text('按钮1'), onPressed: () {}),
+              const TextButton(child: Text('按钮2'), onPressed: null),
+              TextButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮3'),
+                style: TextButton.styleFrom(shape: const StadiumBorder()),
                 onPressed: () {},
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮4'),
-                onPressed: null,
-              ),
-              FlatButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('按钮5'),
-                shape: Border.all(width: 1.0),
+                style: flatButtonStyle,
                 onPressed: () {},
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('按钮6'),
-                shape: Border.all(width: 1.0),
-                onPressed: null,
-              ),
-              FlatButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('按钮7'),
-                shape: const StadiumBorder(side: BorderSide()),
+                label: const Text('按钮5'),
+                style: TextButton.styleFrom(
+                  shape: ContinuousRectangleBorder(
+                    side: const BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
                 // 抗锯齿
                 clipBehavior: Clip.antiAlias,
                 onPressed: () {},
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('按钮8'),
-                shape: const StadiumBorder(),
-                // BeveledRectangleBorder 顶端斜角
-                // BoxBorder
-                // CircleBorder 圆形
-                // InputBorder
-                // RoundedRectangleBorder 顶端圆角
-                // StadiumBorder 体育场型
+                label: const Text('按钮6'),
+                style: TextButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                // 抗锯齿
+                clipBehavior: Clip.hardEdge,
                 onPressed: () {},
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('按钮9'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                  side: BorderSide(),
+                label: const Text('按钮7'),
+                style: TextButton.styleFrom().copyWith(
+                  // 根据状态改变按钮形状, 同理:其他属性也可以进行更改
+                  shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        side: BorderSide(color: Colors.red),
+                      );
+                    if (states.contains(MaterialState.hovered))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        side: BorderSide(color: Colors.green),
+                      );
+                    if (states.contains(MaterialState.pressed))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        side: BorderSide(color: Colors.blue),
+                      );
+                    return const StadiumBorder(
+                      side: BorderSide(color: Colors.grey),
+                    );
+                  }),
                 ),
                 onPressed: () {},
               ),
@@ -218,7 +261,7 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             height: 40.0,
             alignment: Alignment.center,
             child: const Text(
-              '常用组件(RaisedButton)',
+              '常用组件(ElevatedButton)',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w800,
@@ -229,64 +272,80 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             spacing: 10.0,
             runSpacing: 10.0,
             children: <Widget>[
-              RaisedButton(child: const Text('按钮1'), onPressed: () {}),
-              RaisedButton(child: const Text('按钮2'), onPressed: () {}),
-              RaisedButton.icon(
+              ElevatedButton(child: const Text('按钮1'), onPressed: () {}),
+              const ElevatedButton(child: Text('按钮2'), onPressed: null),
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮3'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                ),
+                style: ElevatedButton.styleFrom(onSurface: Colors.red),
                 onPressed: () {},
               ),
-              RaisedButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮4'),
                 onPressed: null,
               ),
-              RaisedButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮5'),
-                shape: Border.all(width: 1.0),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(88, 36),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  shape: const StadiumBorder(),
+                ),
                 onPressed: () {},
               ),
-              RaisedButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮6'),
-                shape: Border.all(width: 1.0),
-                onPressed: null,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(88, 36),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  shape: const StadiumBorder(),
+                ),
+                autofocus: true,
+                onPressed: () {},
               ),
-              RaisedButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮7'),
-                shape: const StadiumBorder(side: BorderSide()),
-                // 抗锯齿
-                clipBehavior: Clip.antiAlias,
+                style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
                 onPressed: () {},
               ),
-              RaisedButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮8'),
-                shape: const StadiumBorder(),
-                // BeveledRectangleBorder 顶端斜角
-                // BoxBorder
-                // CircleBorder 圆形
-                // InputBorder
-                // RoundedRectangleBorder 顶端圆角
-                // StadiumBorder 体育场型
-                onPressed: () {},
-              ),
-              RaisedButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('按钮9'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                  side: BorderSide(),
+                style: ElevatedButton.styleFrom().copyWith(
+                  // 根据状态改变按钮形状, 同理:其他属性也可以进行更改
+                  shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.focused))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        side: BorderSide(color: Colors.red),
+                      );
+                    if (states.contains(MaterialState.hovered))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        side: BorderSide(color: Colors.green),
+                      );
+                    if (states.contains(MaterialState.pressed))
+                      return const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        side: BorderSide(color: Colors.blue),
+                      );
+                    return const StadiumBorder(
+                      side: BorderSide(color: Colors.grey),
+                    );
+                  }),
                 ),
+                autofocus: true,
                 onPressed: () {},
               ),
             ],
@@ -307,52 +366,93 @@ class _WidgetsBodyState extends State<WidgetsBody> {
             spacing: 10.0,
             runSpacing: 10.0,
             children: <Widget>[
-              OutlineButton(child: const Text('按钮1'), onPressed: () {}),
-              OutlineButton(
-                shape: const StadiumBorder(),
+              OutlinedButton(child: const Text('按钮1'), onPressed: () {}),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                ).copyWith(
+                  side: MaterialStateProperty.resolveWith<BorderSide>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1,
+                        );
+                      return const BorderSide(color: Colors.grey);
+                    },
+                  ),
+                ),
                 child: const Text('按钮1'),
                 onPressed: () {},
               ),
-              const OutlineButton(child: Text('按钮2'), onPressed: null),
-              OutlineButton.icon(
+              const OutlinedButton(child: Text('按钮2'), onPressed: null),
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮3'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+                style: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
                   ),
                 ),
                 onPressed: () {},
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮4'),
                 onPressed: null,
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮5'),
-                shape: Border.all(width: 1.0),
+                style: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    side: BorderSide(width: 1.0),
+                  ),
+                ).copyWith(
+                  side: MaterialStateProperty.resolveWith<BorderSide>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                        );
+                      return const BorderSide(color: Colors.grey);
+                    },
+                  ),
+                ),
                 onPressed: () {},
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮6'),
-                shape: Border.all(width: 1.0),
+                style: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    side: BorderSide(width: 1.0),
+                  ),
+                ),
                 onPressed: null,
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮7'),
-                shape: const StadiumBorder(side: BorderSide()),
+                style: OutlinedButton.styleFrom(
+                  shape: const StadiumBorder(
+                    side: BorderSide(),
+                  ),
+                ),
                 // 抗锯齿
                 clipBehavior: Clip.antiAlias,
                 onPressed: () {},
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮8'),
-                shape: const StadiumBorder(),
+                style: OutlinedButton.styleFrom(
+                  shape: const StadiumBorder(
+                    side: BorderSide(),
+                  ),
+                ),
                 // BeveledRectangleBorder 顶端斜角
                 // BoxBorder
                 // CircleBorder 圆形
@@ -361,14 +461,27 @@ class _WidgetsBodyState extends State<WidgetsBody> {
                 // StadiumBorder 体育场型
                 onPressed: () {},
               ),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('按钮9'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+                style: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                    side: BorderSide(),
                   ),
-                  side: BorderSide(),
+                ).copyWith(
+                  side: MaterialStateProperty.resolveWith<BorderSide>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1,
+                        );
+                      return const BorderSide(color: Colors.grey);
+                    },
+                  ),
                 ),
                 onPressed: () {},
               ),
@@ -405,7 +518,7 @@ class _WidgetsBodyState extends State<WidgetsBody> {
               ),
               IconButton(
                 icon: const Icon(Icons.volume_up),
-                // padding: EdgeInsets.all(20.0),
+                // padding: const EdgeInsets.all(20.0),
                 onPressed: () {},
               ),
               FloatingActionButton(
@@ -460,6 +573,18 @@ class _WidgetsBodyState extends State<WidgetsBody> {
                   Icons.switch_camera,
                 ),
                 shape: const CircleBorder(side: BorderSide()),
+              ),
+              RawMaterialButton(
+                onPressed: () {},
+                child: const Icon(
+                  Icons.switch_camera,
+                ),
+                shape: const CircleBorder(),
+                elevation: 3.0,
+                fillColor: Theme.of(context).canvasColor,
+                padding: const EdgeInsets.all(12.0),
+                // 抗锯齿
+                clipBehavior: Clip.antiAlias,
               ),
               RawMaterialButton(
                 onPressed: () {},
