@@ -5,7 +5,7 @@ class WidgetsThemeColorsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, String> listAttribute = _themeAttribute(context);
-    final Map<String, Color> listThemeColor = _themeColorList(context);
+    final Map<String, Color?> listThemeColor = _themeColorList(context);
     final Map<String, Color> listTextThemeColor = _themeTextColorList(context);
     return ListView(
       padding: const EdgeInsets.all(15.0),
@@ -39,7 +39,7 @@ class WidgetsThemeColorsBody extends StatelessWidget {
         ),
         const Divider(height: 30.0, thickness: 3.0),
         ...listThemeColor.keys.map((String key) {
-          return _buildThemeColor(key, listThemeColor[key]!);
+          return _buildThemeColor(key, listThemeColor[key]);
         }).toList(),
         const Divider(height: 30.0, thickness: 3.0),
         Container(
@@ -70,7 +70,7 @@ class WidgetsThemeColorsBody extends StatelessWidget {
       'accentColorBrightness': data.accentColorBrightness.toString(),
       'primaryColorBrightness': data.primaryColorBrightness.toString(),
       'splashFactory': data.splashFactory.toString(),
-      'fontFamily': DefaultTextStyle.of(context).style.fontFamily!,
+      'fontFamily': DefaultTextStyle.of(context).style.fontFamily ?? '未知',
       'platform': data.platform.toString(),
       'materialTapTargetSize': data.materialTapTargetSize.toString(),
       'applyElevationOverlayColor': data.applyElevationOverlayColor.toString(),
@@ -80,9 +80,11 @@ class WidgetsThemeColorsBody extends StatelessWidget {
   }
 
   /// 系统主要颜色
-  Map<String, Color> _themeColorList(BuildContext context) {
+  Map<String, Color?> _themeColorList(BuildContext context) {
     final ThemeData data = Theme.of(context);
-    return <String, Color>{
+
+    print(data.textSelectionTheme.selectionColor);
+    return <String, Color?>{
       'primarySwatch': data.primaryColor,
       'primaryColor': data.primaryColor,
       'primaryColorLight': data.primaryColorLight,
@@ -102,9 +104,9 @@ class WidgetsThemeColorsBody extends StatelessWidget {
       'disabledColor': data.disabledColor,
       'buttonColor': data.buttonColor,
       'secondaryHeaderColor': data.secondaryHeaderColor,
-      'textSelectionColor': data.textSelectionTheme.selectionColor!,
-      'cursorColor': data.textSelectionTheme.cursorColor!,
-      'textSelectionHandleColor': data.textSelectionTheme.selectionHandleColor!,
+      'textSelectionColor': data.textSelectionTheme.selectionColor,
+      'cursorColor': data.textSelectionTheme.cursorColor,
+      'textSelectionHandleColor': data.textSelectionTheme.selectionHandleColor,
       'backgroundColor': data.backgroundColor,
       'dialogBackgroundColor': data.dialogBackgroundColor,
       'indicatorColor': data.indicatorColor,
@@ -137,7 +139,7 @@ class WidgetsThemeColorsBody extends StatelessWidget {
     };
   }
 
-  Widget _buildThemeColor(String name, Color color) {
+  Widget _buildThemeColor(String name, Color? color) {
     return SizedBox(
       height: 45.0,
       child: Row(
@@ -147,30 +149,33 @@ class WidgetsThemeColorsBody extends StatelessWidget {
             flex: 1,
             child: Text(name, maxLines: 3),
           ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 35.0,
-              alignment: Alignment.center,
-              child: Text(
-                color.value.toRadixString(16).padLeft(8, '0').toUpperCase(),
-                style: TextStyle(
-                  color: Color.fromARGB(
-                    color.alpha,
-                    255 - color.red,
-                    255 - color.green,
-                    255 - color.blue,
+          if (color == null)
+            const SizedBox.shrink()
+          else
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 35.0,
+                alignment: Alignment.center,
+                child: Text(
+                  color.value.toRadixString(16).padLeft(8, '0').toUpperCase(),
+                  style: TextStyle(
+                    color: Color.fromARGB(
+                      color.alpha,
+                      255 - color.red,
+                      255 - color.green,
+                      255 - color.blue,
+                    ),
+                  ),
+                ),
+                decoration: ShapeDecoration(
+                  color: color,
+                  shape: const StadiumBorder(
+                    side: BorderSide(width: 5.0, color: Colors.black),
                   ),
                 ),
               ),
-              decoration: ShapeDecoration(
-                color: color,
-                shape: const StadiumBorder(
-                  side: BorderSide(width: 5.0, color: Colors.black),
-                ),
-              ),
             ),
-          ),
         ],
       ),
     );
